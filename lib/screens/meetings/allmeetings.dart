@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants.dart';
 import 'addmeeting.dart';
@@ -23,6 +24,14 @@ class _MeetingsState extends State<Meetings> {
   var items;
   bool isLoading = true;
   List meetings = [];
+
+
+  Future<void> _launchInBrowser(String myUrl) async {
+    final Uri url = Uri.parse(myUrl);
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
+    }
+  }
 
   Future<void> getAllMeetings() async {
     const url = "https://fnetagents.xyz/get_all_meetings/";
@@ -96,6 +105,20 @@ class _MeetingsState extends State<Meetings> {
                                   ],
                                 ),
                               ),
+                              GestureDetector(
+                                onTap: ()async{
+                                 await _launchInBrowser (items['meeting_link']);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 18.0),
+                                  child: Row(
+                                    children: const [
+                                      Text("Meeting Link  ",style:TextStyle(fontWeight: FontWeight.bold,color:Colors.blue)),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 18.0),
                                 child: Row(

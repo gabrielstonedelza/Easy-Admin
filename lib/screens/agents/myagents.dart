@@ -78,7 +78,7 @@ class _MyAgentsState extends State<MyAgents> {
 
   }
 
-  approveOwner(String userId,String email,String username,String phone,String fullName,String supervisor,String aCode) async {
+  approveOwner(String userId,String email,String username,String phone,String fullName,String owner,String aCode) async {
     final depositUrl = "https://fnetagents.xyz/approve_user/$userId/";
     final myLink = Uri.parse(depositUrl);
     final res = await http.put(myLink, headers: {
@@ -90,7 +90,7 @@ class _MyAgentsState extends State<MyAgents> {
       "username": username,
       "phone_number": phone,
       "full_name": fullName,
-      "supervisor": supervisor,
+      "owner": owner,
       "agent_unique_code": aCode,
     });
     if (res.statusCode == 201) {
@@ -110,7 +110,7 @@ class _MyAgentsState extends State<MyAgents> {
       }
     }
   }
-  addToBlockedList(String userId,String email,String username,String phone,String fullName,String supervisor,String aCode) async {
+  addToBlockedList(String userId,String email,String username,String phone,String fullName,String owner,String aCode) async {
     final depositUrl = "https://fnetagents.xyz/update_blocked/$userId/";
     final myLink = Uri.parse(depositUrl);
     final res = await http.put(myLink, headers: {
@@ -122,7 +122,7 @@ class _MyAgentsState extends State<MyAgents> {
       "username": username,
       "phone_number": phone,
       "full_name": fullName,
-      "supervisor": supervisor,
+      "owner": owner,
       "agent_unique_code": aCode,
     });
     if (res.statusCode == 201) {
@@ -138,12 +138,12 @@ class _MyAgentsState extends State<MyAgents> {
     }
     else{
       if (kDebugMode) {
-        // print(res.body);
+        print(res.body);
       }
     }
   }
 
-  removeFromBlockedList(String userId,String email,String username,String phone,String fullName,String supervisor,String aCode) async {
+  removeFromBlockedList(String userId,String email,String username,String phone,String fullName,String owner,String aCode) async {
     final depositUrl = "https://fnetagents.xyz/update_blocked/$userId/";
     final myLink = Uri.parse(depositUrl);
     final res = await http.put(myLink, headers: {
@@ -155,7 +155,7 @@ class _MyAgentsState extends State<MyAgents> {
       "username": username,
       "phone_number": phone,
       "full_name": fullName,
-      "supervisor": supervisor,
+      "owner": owner,
       "agent_unique_code": aCode,
     });
     if (res.statusCode == 201) {
@@ -207,15 +207,19 @@ class _MyAgentsState extends State<MyAgents> {
             itemCount: controller.allMyAgents != null ? controller.allMyAgents.length : 0,
             itemBuilder: (context, i) {
               items = controller.allMyAgents[i];
-              return Card(
+              return controller.allMyAgents[i]['agent_unique_code'] == profileController.adminUniqueCode ? Container() : Card(
                 color: secondaryColor,
                 elevation: 12,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 child: ListTile(
                   onTap: (){
-
-                    controller.allMyAgents[i]['user_approved'] ? Get.to(()=>AgentDetails(username:controller.allMyAgents[i]['username'])) : approveOwner(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['supervisor'],controller.allMyAgents[i]['agent_unique_code']);
+                    !controller.allMyAgents[i]['user_approved'] ? Get.snackbar("Please wait", "approving owner",
+                        colorText: defaultWhite,
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: snackBackground,
+                        duration: const Duration(seconds: 5)) : Container();
+                    controller.allMyAgents[i]['user_approved'] ? Get.to(()=>AgentDetails(username:controller.allMyAgents[i]['username'])) : approveOwner(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['owner'],controller.allMyAgents[i]['agent_unique_code']);
                   },
                   title: buildRow("Name: ", "full_name"),
                   subtitle: Column(
@@ -247,7 +251,7 @@ class _MyAgentsState extends State<MyAgents> {
                             snackPosition: SnackPosition.BOTTOM,
                             duration: const Duration(seconds: 5),
                             backgroundColor: snackBackground);
-                        removeFromBlockedList(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['supervisor'],controller.allMyAgents[i]['agent_unique_code'],);
+                        removeFromBlockedList(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['owner'],controller.allMyAgents[i]['agent_unique_code'],);
                       },
                       icon:Image.asset("assets/images/blocked.png",width:100,height:100)
                   ) :
@@ -258,7 +262,7 @@ class _MyAgentsState extends State<MyAgents> {
                             snackPosition: SnackPosition.BOTTOM,
                             duration: const Duration(seconds: 5),
                             backgroundColor: snackBackground);
-                        addToBlockedList(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['supervisor'],controller.allMyAgents[i]['agent_unique_code']);
+                        addToBlockedList(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['owner'],controller.allMyAgents[i]['agent_unique_code']);
                       },
                       icon:Image.asset("assets/images/block.png",width:100,height:100)
                   ),

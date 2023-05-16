@@ -219,7 +219,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return  phoneNotAuthenticated ?  AdvancedDrawer(
+    return  AdvancedDrawer(
         backdropColor: snackBackground,
         controller: _advancedDrawerController,
         animationCurve: Curves.easeInOut,
@@ -551,33 +551,8 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),
         )
-    )
-        :
-    Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Lottie.asset("assets/images/96238-auth-failed.json"),
-          const Center(
-            child: Text(
-              "Authentication Error",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: warning,
-                  fontSize: 20),
-            ),
-          ),
-          const SizedBox(height: 50,),
-          TextButton(
-            onPressed: () {
-              Get.offAll(() => const AuthenticateByPhone());
-            },
-            child: const Text("Authenticate",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
-          )
-        ],
-      ),
-
     );
+
   }
 
   void _handleMenuButtonPressed() {

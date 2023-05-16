@@ -32,10 +32,12 @@ class _AddMeetingState extends State<AddMeeting> {
   late final TextEditingController messageController;
   late final TextEditingController dateOfMeetingController;
   late final TextEditingController timeOfMeetingController;
+  late final TextEditingController meetingLinkController;
   FocusNode titleFocusNode = FocusNode();
   FocusNode messageFocusNode = FocusNode();
   FocusNode dateOfMeetingFocusNode = FocusNode();
   FocusNode timeOfMeetingFocusNode = FocusNode();
+  FocusNode meetingLinkFocusNode = FocusNode();
 
   bool isPosting = false;
   bool isLoading = true;
@@ -63,6 +65,7 @@ class _AddMeetingState extends State<AddMeeting> {
       "message": messageController.text.trim(),
       "date_of_meeting": dateOfMeetingController.text.trim(),
       "time_of_meeting": timeOfMeetingController.text.trim(),
+      "meeting_link": meetingLinkController.text.trim(),
     });
     if (response.statusCode == 201) {
       for(var i in ownersNumbers){
@@ -97,7 +100,6 @@ class _AddMeetingState extends State<AddMeeting> {
           ownersNumbers.add(i['phone_number']);
         }
       }
-      print(ownersNumbers);
     }
 
     setState(() {
@@ -117,6 +119,7 @@ class _AddMeetingState extends State<AddMeeting> {
     messageController = TextEditingController();
     dateOfMeetingController = TextEditingController();
     timeOfMeetingController = TextEditingController();
+    meetingLinkController = TextEditingController();
     fetchOwners();
   }
 
@@ -127,6 +130,7 @@ class _AddMeetingState extends State<AddMeeting> {
     messageController.dispose();
     dateOfMeetingController.dispose();
     timeOfMeetingController.dispose();
+    meetingLinkController.dispose();
   }
 
   @override
@@ -264,6 +268,23 @@ class _AddMeetingState extends State<AddMeeting> {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please pick a time";
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: TextFormField(
+                      controller: meetingLinkController,
+                      focusNode: meetingLinkFocusNode,
+                      cursorRadius: const Radius.elliptical(10, 10),
+                      cursorColor: secondaryColor,
+                      cursorWidth: 10,
+                      decoration: buildInputDecoration("Meeting Link"),
+                      keyboardType: TextInputType.url,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter agenda";
                         }
                       },
                     ),
