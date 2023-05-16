@@ -419,18 +419,18 @@ class _DashboardState extends State<Dashboard> {
                       child: Column(
                         children: [
                           Image.asset(
-                            "assets/images/agent.png",
+                            "assets/images/sms.png",
                             width: 70,
                             height: 70,
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text("Register User"),
+                          const Text("Send Sms"),
                         ],
                       ),
                       onTap: () {
-                        Get.to(() => const AddNewUser());
+                        Get.to(() => const SelectSms());
                       },
                     ),
                   ),
@@ -446,7 +446,7 @@ class _DashboardState extends State<Dashboard> {
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text("Your Agents"),
+                          const Text("Your Owners"),
                         ],
                       ),
                       onTap: () {
@@ -498,7 +498,7 @@ class _DashboardState extends State<Dashboard> {
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text("All Users"),
+                          const Text("All Agents"),
                         ],
                       ),
                       onTap: () {
@@ -530,19 +530,19 @@ class _DashboardState extends State<Dashboard> {
                     child: GestureDetector(
                       child: Column(
                         children: [
-                          Image.asset(
-                            "assets/images/sms.png",
-                            width: 70,
-                            height: 70,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Text("Send Sms"),
+                          // Image.asset(
+                          //   "assets/images/sms.png",
+                          //   width: 70,
+                          //   height: 70,
+                          // ),
+                          // const SizedBox(
+                          //   height: 10,
+                          // ),
+                          // const Text("Send Sms"),
                         ],
                       ),
                       onTap: () {
-                        Get.to(() => const SelectSms());
+                        // Get.to(() => const SelectSms());
                       },
                     ),
                   ),

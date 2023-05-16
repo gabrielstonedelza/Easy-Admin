@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 import '../../constants.dart';
 import '../../controller/agentcontroller.dart';
+import '../widget/loadingui.dart';
 
 
 
@@ -32,23 +33,19 @@ class _MyUsersState extends State<MyUsers> {
   late Timer _timer;
 
   Future<void> getAllMyUsers() async {
-    try {
-      isLoading = true;
-      const completedRides = "https://fnetagents.xyz/get_all_user/";
-      var link = Uri.parse(completedRides);
-      http.Response response = await http.get(link, headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": "Token $uToken"
+    const completedRides = "https://fnetagents.xyz/get_all_agents/";
+    var link = Uri.parse(completedRides);
+    http.Response response = await http.get(link, headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": "Token $uToken"
+    });
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      allMyAgents.assignAll(jsonData);
+      setState(() {
+        isLoading = false;
       });
-      if (response.statusCode == 200) {
-        var jsonData = jsonDecode(response.body);
-        allMyAgents.assignAll(jsonData);
-        setState(() {
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      Get.snackbar("Sorry","something happened or please check your internet connection");
+      print(allMyAgents);
     }
   }
 
@@ -154,65 +151,65 @@ class _MyUsersState extends State<MyUsers> {
       });
     }
     controller.getAllMyAgents(uToken,agentCode);
+    getAllMyUsers();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("All Users"),
+        title: const Text("All Agents"),
         backgroundColor: secondaryColor,
       ),
-      body: GetBuilder<AgentController>(builder: (controller){
-        return ListView.builder(
-            itemCount: controller.allMyAgents != null ? controller.allMyAgents.length : 0,
-            itemBuilder: (context, i) {
-              items = controller.allMyAgents[i];
-              return Card(
-                color: secondaryColor,
-                elevation: 12,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                child: ListTile(
+      body:isLoading
+          ? const LoadingUi() : ListView.builder(
+          itemCount: allMyAgents != null ? allMyAgents.length : 0,
+          itemBuilder: (context, i) {
+            items = allMyAgents[i];
+            return Card(
+              color: secondaryColor,
+              elevation: 12,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
 
-                  title: buildRow("Name: ", "full_name"),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildRow("Username : ", "username"),
-                      buildRow("Phone : ", "phone_number"),
-                      buildRow("Email : ", "email"),
-                      // const Padding(
-                      //   padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),
-                      //   child: Text("Tap for more",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground),),
-                      // )
-                    ],
-                  ),
-                  trailing: items['user_blocked'] ? IconButton(
-                      onPressed: () {
-                        Get.snackbar("Please wait...", "removing user from  block lists",
-                            colorText: defaultWhite,
-                            snackPosition: SnackPosition.BOTTOM,
-                            duration: const Duration(seconds: 5),
-                            backgroundColor: snackBackground);
-                        removeFromBlockedList(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['supervisor'],controller.allMyAgents[i]['agent_unique_code'],);
-                      },
-                      icon:Image.asset("assets/images/blocked.png",width:100,height:100)
-                  ) : IconButton(
-                      onPressed: () {
-                        Get.snackbar("Please wait...", "adding user to block lists",
-                            colorText: defaultWhite,
-                            snackPosition: SnackPosition.BOTTOM,
-                            duration: const Duration(seconds: 5),
-                            backgroundColor: snackBackground);
-                        addToBlockedList(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['supervisor'],controller.allMyAgents[i]['agent_unique_code']);
-                      },
-                      icon:Image.asset("assets/images/block.png",width:100,height:100)
-                  ),
+                title: buildRow("Name: ", "full_name"),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildRow("Username : ", "username"),
+                    buildRow("Phone : ", "phone_number"),
+                    buildRow("Email : ", "email"),
+                    // const Padding(
+                    //   padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),
+                    //   child: Text("Tap for more",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground),),
+                    // )
+                  ],
                 ),
-              );
-            });
-      },),
+                trailing: items['user_blocked'] ? IconButton(
+                    onPressed: () {
+                      Get.snackbar("Please wait...", "removing user from  block lists",
+                          colorText: defaultWhite,
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(seconds: 5),
+                          backgroundColor: snackBackground);
+                      removeFromBlockedList(allMyAgents[i]['id'].toString(),allMyAgents[i]['email'],allMyAgents[i]['username'],allMyAgents[i]['phone_number'],allMyAgents[i]['full_name'],allMyAgents[i]['supervisor'],allMyAgents[i]['agent_unique_code'],);
+                    },
+                    icon:Image.asset("assets/images/blocked.png",width:100,height:100)
+                ) : IconButton(
+                    onPressed: () {
+                      Get.snackbar("Please wait...", "adding user to block lists",
+                          colorText: defaultWhite,
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(seconds: 5),
+                          backgroundColor: snackBackground);
+                      addToBlockedList(allMyAgents[i]['id'].toString(),allMyAgents[i]['email'],allMyAgents[i]['username'],allMyAgents[i]['phone_number'],allMyAgents[i]['full_name'],allMyAgents[i]['supervisor'],allMyAgents[i]['agent_unique_code']);
+                    },
+                    icon:Image.asset("assets/images/block.png",width:100,height:100)
+                ),
+              ),
+            );
+          })
 
     );
   }
