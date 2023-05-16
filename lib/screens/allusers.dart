@@ -154,16 +154,13 @@ class _MyUsersState extends State<MyUsers> {
       });
     }
     controller.getAllMyAgents(uToken,agentCode);
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      controller.getAllMyAgents(uToken,agentCode);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Agents"),
+        title: const Text("All Users"),
         backgroundColor: secondaryColor,
       ),
       body: GetBuilder<AgentController>(builder: (controller){
@@ -185,10 +182,10 @@ class _MyUsersState extends State<MyUsers> {
                       buildRow("Username : ", "username"),
                       buildRow("Phone : ", "phone_number"),
                       buildRow("Email : ", "email"),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),
-                        child: Text("Tap for more",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground),),
-                      )
+                      // const Padding(
+                      //   padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),
+                      //   child: Text("Tap for more",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground),),
+                      // )
                     ],
                   ),
                   trailing: items['user_blocked'] ? IconButton(

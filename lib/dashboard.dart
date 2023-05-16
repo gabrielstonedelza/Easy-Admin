@@ -5,8 +5,11 @@ import 'package:easy_admin/screens/aboutpage.dart';
 import 'package:easy_admin/screens/agents/addnewagent.dart';
 import 'package:easy_admin/screens/agents/myagents.dart';
 import 'package:easy_admin/screens/allusers.dart';
+import 'package:easy_admin/screens/chats/allmyagents.dart';
 import 'package:easy_admin/screens/chats/groupchat.dart';
 import 'package:easy_admin/screens/makepayment.dart';
+import 'package:easy_admin/screens/meetings/allmeetings.dart';
+import 'package:easy_admin/screens/sms/selectsms.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -19,6 +22,7 @@ import 'authenticatebyphone.dart';
 
 import 'constants.dart';
 import 'controller/authphonecontroller.dart';
+import 'controller/localnotificationmanager.dart';
 import 'controller/notificationcontroller.dart';
 import 'controller/profilecontroller.dart';
 import 'controller/trialmonthlypayment.dart';
@@ -110,7 +114,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   unTriggerNotifications(int id) async {
-    final requestUrl = "https://fnetagents.xyz/user_read_notifications/$id/";
+    final requestUrl = "https://fnetagents.xyz/un_trigger_notification/$id/";
     final myLink = Uri.parse(requestUrl);
     final response = await http.put(myLink, headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -118,19 +122,19 @@ class _DashboardState extends State<Dashboard> {
       "Authorization": "Token $uToken"
     }, body: {
       "notification_trigger": "Not Triggered",
+      "read": "Read",
     });
     if (response.statusCode == 200) {}
   }
 
   updateReadNotification(int id) async {
-    final requestUrl = "https://fnetagents.xyz/user_read_notifications/$id/";
+    const requestUrl = "https://fnetagents.xyz/read_notification/";
     final myLink = Uri.parse(requestUrl);
     final response = await http.put(myLink, headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       'Accept': 'application/json',
       "Authorization": "Token $uToken"
     }, body: {
-      "read": "Read",
     });
     if (response.statusCode == 200) {}
   }
@@ -166,32 +170,23 @@ class _DashboardState extends State<Dashboard> {
     profileController.getUserProfile(uToken);
     getAllTriggeredNotifications();
 
-
-    // _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-    //   getAllTriggeredNotifications();
-    //   notificationsController.getAllNotifications(uToken);
-    //   notificationsController.getAllUnReadNotifications(uToken);
-    //
-    //   getAllUnReadNotifications();
-    //   for (var i in triggered) {
-    //     localNotificationManager.showNotifications(
-    //         i['notification_title'], i['notification_message']);
-    //   }
-    // });
-
+    _timer = Timer.periodic(const Duration(seconds: 12), (timer) {
+      getAllTriggeredNotifications();
+      getAllUnReadNotifications();
+      // tpController.fetchFreeTrial(uToken);
+      // tpController.fetchAccountBalance(uToken);
+      // tpController.fetchMonthlyPayment(uToken);
+      for (var i in triggered) {
+        NotificationService().showNotifications(title:i['notification_title'], body:i['notification_message']);
+      }
+    });
     _timer = Timer.periodic(const Duration(seconds: 15), (timer) {
-      tpController.fetchFreeTrial(uToken);
-      tpController.fetchAccountBalance(uToken);
-      tpController.fetchMonthlyPayment(uToken);
       for (var e in triggered) {
         unTriggerNotifications(e["id"]);
       }
     });
-    // localNotificationManager
-    //     .setOnShowNotificationReceive(onNotificationReceive);
-  }
 
-  // onNotificationReceive(ReceiveNotification notification) {}
+  }
 
   logoutUser() async {
     storage.remove("token");
@@ -224,8 +219,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return  tpController.freeTrialEnded && tpController.monthEnded ? const MakeMonthlyPayment() : phoneNotAuthenticated
-        ?  AdvancedDrawer(
+    return  phoneNotAuthenticated ?  AdvancedDrawer(
         backdropColor: snackBackground,
         controller: _advancedDrawerController,
         animationCurve: Curves.easeInOut,
@@ -371,8 +365,10 @@ class _DashboardState extends State<Dashboard> {
                 },
               ),
             ),
-            title: Text(agentCode,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            title: GetBuilder<ProfileController>(builder:(controller){
+              return Text(controller.adminUniqueCode,
+                  style: const TextStyle(fontWeight: FontWeight.bold));
+            }),
             backgroundColor: secondaryColor,
             actions: [
               // IconButton(onPressed: () {  }, icon: const Icon(Icons.notifications),)
@@ -470,11 +466,11 @@ class _DashboardState extends State<Dashboard> {
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text("Cash Out"),
+                          const Text("Chat"),
                         ],
                       ),
                       onTap: () {
-                        Get.to(() => const GroupChat());
+                        Get.to(() => const AllAgents());
 
                       },
                     ),
@@ -514,19 +510,19 @@ class _DashboardState extends State<Dashboard> {
                     child: GestureDetector(
                       child: Column(
                         children: [
-                          // Image.asset(
-                          //   "assets/images/group.png",
-                          //   width: 70,
-                          //   height: 70,
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // const Text("Your Agents"),
+                          Image.asset(
+                            "assets/images/coworking.png",
+                            width: 70,
+                            height: 70,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text("Create Meeting"),
                         ],
                       ),
                       onTap: () {
-                        // Get.to(() => const MyAgents());
+                        Get.to(() => const Meetings());
                       },
                     ),
                   ),
@@ -534,20 +530,19 @@ class _DashboardState extends State<Dashboard> {
                     child: GestureDetector(
                       child: Column(
                         children: [
-                          // Image.asset(
-                          //   "assets/images/groupchat.png",
-                          //   width: 70,
-                          //   height: 70,
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // const Text("Cash Out"),
+                          Image.asset(
+                            "assets/images/sms.png",
+                            width: 70,
+                            height: 70,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text("Send Sms"),
                         ],
                       ),
                       onTap: () {
-                        // Get.to(() => const GroupChat());
-
+                        Get.to(() => const SelectSms());
                       },
                     ),
                   ),
@@ -555,25 +550,6 @@ class _DashboardState extends State<Dashboard> {
               ),
             ],
           ),
-          floatingActionButton: !tpController.freeTrialEnded ? FloatingActionButton(
-            backgroundColor:defaultWhite,
-            onPressed: (){
-              Get.defaultDialog(
-                  buttonColor: secondaryColor,
-                  title: "Trial Alert",
-                  content: Column(
-                    children: [
-                      const Text("You are using a trial version of Easy Agent which is ending on "),
-                      Padding(
-                        padding: const EdgeInsets.only(top:18.0),
-                        child: Text(tpController.endingDate,style: const TextStyle(fontWeight: FontWeight.bold),),
-                      )
-                    ],
-                  )
-              );
-            },
-            child: Image.asset("assets/images/freetrial.png"),
-          ):Container(),
         )
     )
         :

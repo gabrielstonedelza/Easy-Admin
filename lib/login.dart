@@ -3,10 +3,12 @@
 import 'package:easy_admin/widget/loadingui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:neopop/widgets/buttons/neopop_tilted_button/neopop_tilted_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../constants.dart';
+import 'controller/authphonecontroller.dart';
 import 'controller/logincontroller.dart';
 import 'loginabout.dart';
 
@@ -21,12 +23,15 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final LoginController controller = Get.find();
   bool isObscured = true;
+  final storage = GetStorage();
+  late String uToken = "";
 
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _agentCodeController;
+  late final TextEditingController usernameController;
   late final TextEditingController _passwordController;
   FocusNode agentCodeFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
+  final AuthPhoneController authController = Get.find();
 
   final Uri _url = Uri.parse('https://fnetagents.xyz/password-reset/');
 
@@ -52,15 +57,16 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     super.initState();
-    _agentCodeController = TextEditingController();
+    usernameController = TextEditingController();
     _passwordController = TextEditingController();
     controller.getAllAdmin();
+    authController.fetchAuthPhone(uToken);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _agentCodeController.dispose();
+    usernameController.dispose();
     _passwordController.dispose();
   }
 
@@ -100,16 +106,16 @@ class _LoginViewState extends State<LoginView> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
-                      controller: _agentCodeController,
+                      controller: usernameController,
                       focusNode: agentCodeFocusNode,
                       cursorColor: secondaryColor,
                       cursorRadius: const Radius.elliptical(10, 10),
                       cursorWidth: 10,
-                      decoration: buildInputDecoration("Agent Code"),
+                      decoration: buildInputDecoration("Username"),
                       keyboardType: TextInputType.text,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Please enter agent code";
+                          return "Please enter username";
                         }
                       },
                     ),
@@ -169,8 +175,14 @@ class _LoginViewState extends State<LoginView> {
                       if (!_formKey.currentState!.validate()) {
                         return;
                       } else {
-                        controller.loginUser(_agentCodeController.text.trim(),
+                        controller.loginUser(usernameController.text.trim(),
                           _passwordController.text.trim(),);
+                        // storage.write("phoneAuthenticated", "Authenticated");
+                        // storage.write("phoneId", authController.phoneId);
+                        // storage.write("phoneModel", authController.phoneModel);
+                        // storage.write("phoneBrand", authController.phoneBrand);
+                        // storage.write("phoneFingerprint", authController.phoneFingerprint);
+                        // authController.authenticatePhone(uToken,authController.phoneId,authController.phoneModel,authController.phoneBrand,authController.phoneFingerprint);
                       }
                     },
                     decoration: const NeoPopTiltedButtonDecoration(

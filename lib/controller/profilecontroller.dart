@@ -8,6 +8,7 @@ class ProfileController extends GetxController{
   bool isLoading = false;
   List profileDetails = [];
   late String userId = "";
+  late String adminUniqueCode = "";
 
   Future<void> getUserProfile(String token) async {
     try {
@@ -54,6 +55,7 @@ class ProfileController extends GetxController{
         profileDetails = jsonData;
         for(var i in profileDetails){
           userId = i['id'].toString();
+          adminUniqueCode = i['agent_unique_code'];
         }
         update();
       }

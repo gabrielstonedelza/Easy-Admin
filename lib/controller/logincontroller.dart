@@ -14,7 +14,7 @@ class LoginController extends GetxController {
   bool isLoggingIn = false;
   bool isUser = false;
   late List allAdmin = [];
-  late List adminsCodes = [];
+  late List adminUsernames = [];
   late List adminEmails = [];
   late int oTP = 0;
   late String myToken = "";
@@ -36,7 +36,7 @@ class LoginController extends GetxController {
         var jsonData = jsonDecode(response.body);
         allAdmin.assignAll(jsonData);
         for (var i in allAdmin) {
-          adminsCodes.add(i['agent_unique_code']);
+          adminUsernames.add(i['username']);
         }
         update();
       }
@@ -48,12 +48,12 @@ class LoginController extends GetxController {
     }
   }
 
-  Future<void> loginUser(String agentCode, String password) async {
+  Future<void> loginUser(String username, String password) async {
     const loginUrl = "https://fnetagents.xyz/auth/token/login/";
     final myLink = Uri.parse(loginUrl);
     http.Response response = await client.post(myLink,
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: {"agent_unique_code": agentCode, "password": password});
+        body: {"username": username, "password": password});
 
     if (response.statusCode == 200) {
       final resBody = response.body;
@@ -61,11 +61,11 @@ class LoginController extends GetxController {
       var userToken = jsonData['auth_token'];
 
       storage.write("token", userToken);
-      storage.write("agent_code", agentCode);
+      storage.write("agent_code", username);
       isLoggingIn = false;
       isUser = true;
 
-      if (adminsCodes.contains(agentCode)) {
+      if (adminUsernames.contains(username)) {
         Get.offAll(() => const AuthenticateByPhone());
       } else {
         Get.snackbar(

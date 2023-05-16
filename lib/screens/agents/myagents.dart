@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:easy_admin/controller/profilecontroller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 
 import '../../constants.dart';
 import '../../controller/agentcontroller.dart';
-import '../../widget/loadingui.dart';
 import 'details/agenttransactions.dart';
 
 
@@ -22,6 +23,7 @@ class MyAgents extends StatefulWidget {
 
 class _MyAgentsState extends State<MyAgents> {
   final AgentController controller = Get.find();
+  final ProfileController profileController = Get.find();
   late String uToken = "";
   late String agentCode = "";
   final storage = GetStorage();
@@ -74,6 +76,39 @@ class _MyAgentsState extends State<MyAgents> {
       });
     }
 
+  }
+
+  approveOwner(String userId,String email,String username,String phone,String fullName,String supervisor,String aCode) async {
+    final depositUrl = "https://fnetagents.xyz/approve_user/$userId/";
+    final myLink = Uri.parse(depositUrl);
+    final res = await http.put(myLink, headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": "Token $uToken"
+    }, body: {
+      "user_approved": "True",
+      "email": email,
+      "username": username,
+      "phone_number": phone,
+      "full_name": fullName,
+      "supervisor": supervisor,
+      "agent_unique_code": aCode,
+    });
+    if (res.statusCode == 201) {
+      setState(() {
+        isLoading = false;
+      });
+      getAllMyAgents();
+      Get.snackbar("Success", "agent is added to block lists",
+          colorText: defaultWhite,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 5),
+          backgroundColor: snackBackground);
+    }
+    else{
+      if (kDebugMode) {
+        // print(res.body);
+      }
+    }
   }
   addToBlockedList(String userId,String email,String username,String phone,String fullName,String supervisor,String aCode) async {
     final depositUrl = "https://fnetagents.xyz/update_blocked/$userId/";
@@ -154,9 +189,9 @@ class _MyAgentsState extends State<MyAgents> {
         agentCode = storage.read("agent_code");
       });
     }
-    controller.getAllMyAgents(uToken,agentCode);
+    controller.getAllMyAgents(uToken,profileController.adminUniqueCode);
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      controller.getAllMyAgents(uToken,agentCode);
+      controller.getAllMyAgents(uToken,profileController.adminUniqueCode);
     });
   }
 
@@ -179,7 +214,8 @@ class _MyAgentsState extends State<MyAgents> {
                     borderRadius: BorderRadius.circular(12)),
                 child: ListTile(
                   onTap: (){
-                    Get.to(()=>AgentDetails(username:controller.allMyAgents[i]['username']));
+
+                    controller.allMyAgents[i]['user_approved'] ? Get.to(()=>AgentDetails(username:controller.allMyAgents[i]['username'])) : approveOwner(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['supervisor'],controller.allMyAgents[i]['agent_unique_code']);
                   },
                   title: buildRow("Name: ", "full_name"),
                   subtitle: Column(
@@ -188,10 +224,20 @@ class _MyAgentsState extends State<MyAgents> {
                       buildRow("Username : ", "username"),
                       buildRow("Phone : ", "phone_number"),
                       buildRow("Email : ", "email"),
+                      !controller.allMyAgents[i]['user_approved'] ?
                       const Padding(
                         padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),
+                        child: Text("Owner is not approved yet,tap to approve",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground),),
+                      ) : Row(
+                        children: [
+                          Lottie.asset("assets/images/41755-approved.json",width: 50,height: 50),
+                          const Text("Owner Approved",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground))
+                        ],
+                      ),
+                      controller.allMyAgents[i]['user_approved'] ?  const Padding(
+                        padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),
                         child: Text("Tap for more",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground),),
-                      )
+                      ) : Container(),
                     ],
                   ),
                   trailing: items['user_blocked'] ? IconButton(
@@ -204,7 +250,8 @@ class _MyAgentsState extends State<MyAgents> {
                         removeFromBlockedList(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['supervisor'],controller.allMyAgents[i]['agent_unique_code'],);
                       },
                       icon:Image.asset("assets/images/blocked.png",width:100,height:100)
-                  ) : IconButton(
+                  ) :
+                  IconButton(
                       onPressed: () {
                         Get.snackbar("Please wait...", "adding user to block lists",
                             colorText: defaultWhite,
