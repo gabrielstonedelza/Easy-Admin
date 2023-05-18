@@ -199,7 +199,7 @@ class _MyAgentsState extends State<MyAgents> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Agents"),
+        title: const Text("My Owners"),
         backgroundColor: secondaryColor,
       ),
       body: GetBuilder<AgentController>(builder: (controller){
@@ -219,7 +219,7 @@ class _MyAgentsState extends State<MyAgents> {
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: snackBackground,
                         duration: const Duration(seconds: 5)) : Container();
-                    controller.allMyAgents[i]['user_approved'] ? Get.to(()=>AgentDetails(username:controller.allMyAgents[i]['username'])) : approveOwner(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['owner'],controller.allMyAgents[i]['agent_unique_code']);
+                   approveOwner(controller.allMyAgents[i]['id'].toString(),controller.allMyAgents[i]['email'],controller.allMyAgents[i]['username'],controller.allMyAgents[i]['phone_number'],controller.allMyAgents[i]['full_name'],controller.allMyAgents[i]['owner'],controller.allMyAgents[i]['agent_unique_code']);
                   },
                   title: buildRow("Name: ", "full_name"),
                   subtitle: Column(
@@ -238,10 +238,6 @@ class _MyAgentsState extends State<MyAgents> {
                           const Text("Owner Approved",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground))
                         ],
                       ),
-                      controller.allMyAgents[i]['user_approved'] ?  const Padding(
-                        padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),
-                        child: Text("Tap for more",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground),),
-                      ) : Container(),
                     ],
                   ),
                   trailing: items['user_blocked'] ? IconButton(

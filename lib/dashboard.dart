@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:easy_admin/join_screen.dart';
 import 'package:easy_admin/screens/aboutpage.dart';
 import 'package:easy_admin/screens/agents/addnewagent.dart';
-import 'package:easy_admin/screens/agents/myagents.dart';
+import 'package:easy_admin/screens/agents/myowners.dart';
 import 'package:easy_admin/screens/allusers.dart';
 import 'package:easy_admin/screens/chats/allmyagents.dart';
 import 'package:easy_admin/screens/chats/groupchat.dart';
+import 'package:easy_admin/screens/chats/ownersgroupchat.dart';
 import 'package:easy_admin/screens/makepayment.dart';
 import 'package:easy_admin/screens/meetings/allmeetings.dart';
 import 'package:easy_admin/screens/sms/selectsms.dart';
@@ -20,6 +22,7 @@ import 'package:get/get.dart';
 
 import 'authenticatebyphone.dart';
 
+import 'complains.dart';
 import 'constants.dart';
 import 'controller/authphonecontroller.dart';
 import 'controller/localnotificationmanager.dart';
@@ -470,7 +473,7 @@ class _DashboardState extends State<Dashboard> {
                         ],
                       ),
                       onTap: () {
-                        Get.to(() => const AllAgents());
+                        Get.to(() => const OwnersGroupChat());
 
                       },
                     ),
@@ -530,19 +533,90 @@ class _DashboardState extends State<Dashboard> {
                     child: GestureDetector(
                       child: Column(
                         children: [
+                          Image.asset(
+                            "assets/images/sad.png",
+                            width: 70,
+                            height: 70,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text("Complains"),
+                        ],
+                      ),
+                      onTap: () {
+                        Get.to(() => const Complains());
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Divider(),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            "assets/images/live-stream.png",
+                            width: 70,
+                            height: 70,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text("Start Live Stream"),
+                        ],
+                      ),
+                      onTap: () {
+                        Get.to(() => JoinScreen());
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Column(
+                        children: [
                           // Image.asset(
-                          //   "assets/images/sms.png",
+                          //   "assets/images/coworking.png",
                           //   width: 70,
                           //   height: 70,
                           // ),
                           // const SizedBox(
                           //   height: 10,
                           // ),
-                          // const Text("Send Sms"),
+                          // const Text("Create Meeting"),
                         ],
                       ),
                       onTap: () {
-                        // Get.to(() => const SelectSms());
+                        // Get.to(() => const Meetings());
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Column(
+                        children: [
+                          // Image.asset(
+                          //   "assets/images/sad.png",
+                          //   width: 70,
+                          //   height: 70,
+                          // ),
+                          // const SizedBox(
+                          //   height: 10,
+                          // ),
+                          // const Text("Complains"),
+                        ],
+                      ),
+                      onTap: () {
+                        // Get.to(() => const Complains());
                       },
                     ),
                   ),
