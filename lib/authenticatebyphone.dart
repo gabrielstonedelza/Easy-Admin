@@ -152,6 +152,7 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
       }
     }
     );
+    print(oTP);
   }
 
 
@@ -204,6 +205,7 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
                 const SizedBox(width: 20,),
                 isCompleted ? TextButton(
                   onPressed: (){
+                    // print(oTP);
                     String num = agentPhone.replaceFirst("0", '+233');
                     sendSms.sendMySms(num, "EasyAgent","Your code $oTP");
                     Get.snackbar(

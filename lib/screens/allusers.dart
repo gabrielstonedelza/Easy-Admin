@@ -37,7 +37,6 @@ class _MyUsersState extends State<MyUsers> {
     var link = Uri.parse(completedRides);
     http.Response response = await http.get(link, headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "Authorization": "Token $uToken"
     });
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
@@ -45,7 +44,8 @@ class _MyUsersState extends State<MyUsers> {
       setState(() {
         isLoading = false;
       });
-      print(allMyAgents);
+    }
+    else{
     }
   }
 
@@ -71,7 +71,7 @@ class _MyUsersState extends State<MyUsers> {
     }
 
   }
-  addToBlockedList(String userId,String email,String username,String phone,String fullName,String supervisor,String aCode) async {
+  addToBlockedList(String userId,String email,String username,String phone,String fullName,String owner,String aCode) async {
     final depositUrl = "https://fnetagents.xyz/update_blocked/$userId/";
     final myLink = Uri.parse(depositUrl);
     final res = await http.put(myLink, headers: {
@@ -83,7 +83,7 @@ class _MyUsersState extends State<MyUsers> {
       "username": username,
       "phone_number": phone,
       "full_name": fullName,
-      "supervisor": supervisor,
+      "owner": owner,
       "agent_unique_code": aCode,
     });
     if (res.statusCode == 201) {
@@ -91,7 +91,7 @@ class _MyUsersState extends State<MyUsers> {
         isLoading = false;
       });
       getAllMyUsers();
-      Get.snackbar("Success", "agent is added to block lists",
+      Get.snackbar("Please wait", "blocking agent",
           colorText: defaultWhite,
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 5),
@@ -104,7 +104,7 @@ class _MyUsersState extends State<MyUsers> {
     }
   }
 
-  removeFromBlockedList(String userId,String email,String username,String phone,String fullName,String supervisor,String aCode) async {
+  removeFromBlockedList(String userId,String email,String username,String phone,String fullName,String owner,String aCode) async {
     final depositUrl = "https://fnetagents.xyz/update_blocked/$userId/";
     final myLink = Uri.parse(depositUrl);
     final res = await http.put(myLink, headers: {
@@ -116,7 +116,7 @@ class _MyUsersState extends State<MyUsers> {
       "username": username,
       "phone_number": phone,
       "full_name": fullName,
-      "supervisor": supervisor,
+      "owner": owner,
       "agent_unique_code": aCode,
     });
     if (res.statusCode == 201) {
@@ -124,7 +124,7 @@ class _MyUsersState extends State<MyUsers> {
         isLoading = false;
       });
       getAllMyUsers();
-      Get.snackbar("Success", "agent is removed from block lists",
+      Get.snackbar("Please wait", "unblocking agent",
           colorText: defaultWhite,
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 5),
@@ -193,7 +193,7 @@ class _MyUsersState extends State<MyUsers> {
                           snackPosition: SnackPosition.BOTTOM,
                           duration: const Duration(seconds: 5),
                           backgroundColor: snackBackground);
-                      removeFromBlockedList(allMyAgents[i]['id'].toString(),allMyAgents[i]['email'],allMyAgents[i]['username'],allMyAgents[i]['phone_number'],allMyAgents[i]['full_name'],allMyAgents[i]['supervisor'],allMyAgents[i]['agent_unique_code'],);
+                      removeFromBlockedList(allMyAgents[i]['id'].toString(),allMyAgents[i]['email'],allMyAgents[i]['username'],allMyAgents[i]['phone_number'],allMyAgents[i]['full_name'],allMyAgents[i]['owner'],allMyAgents[i]['agent_unique_code'],);
                     },
                     icon:Image.asset("assets/images/blocked.png",width:100,height:100)
                 ) : IconButton(
@@ -203,7 +203,7 @@ class _MyUsersState extends State<MyUsers> {
                           snackPosition: SnackPosition.BOTTOM,
                           duration: const Duration(seconds: 5),
                           backgroundColor: snackBackground);
-                      addToBlockedList(allMyAgents[i]['id'].toString(),allMyAgents[i]['email'],allMyAgents[i]['username'],allMyAgents[i]['phone_number'],allMyAgents[i]['full_name'],allMyAgents[i]['supervisor'],allMyAgents[i]['agent_unique_code']);
+                      addToBlockedList(allMyAgents[i]['id'].toString(),allMyAgents[i]['email'],allMyAgents[i]['username'],allMyAgents[i]['phone_number'],allMyAgents[i]['full_name'],allMyAgents[i]['owner'],allMyAgents[i]['agent_unique_code']);
                     },
                     icon:Image.asset("assets/images/block.png",width:100,height:100)
                 ),

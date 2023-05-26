@@ -22,6 +22,7 @@ import 'package:get/get.dart';
 
 import 'authenticatebyphone.dart';
 
+import 'authphones.dart';
 import 'complains.dart';
 import 'constants.dart';
 import 'controller/authphonecontroller.dart';
@@ -584,19 +585,20 @@ class _DashboardState extends State<Dashboard> {
                     child: GestureDetector(
                       child: Column(
                         children: [
-                          // Image.asset(
-                          //   "assets/images/coworking.png",
-                          //   width: 70,
-                          //   height: 70,
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // const Text("Create Meeting"),
+                          Image.asset(
+                            "assets/images/two-factor-authentication.png",
+                            width: 70,
+                            height: 70,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text("Delete auth"),
+                          const Text("Phones"),
                         ],
                       ),
                       onTap: () {
-                        // Get.to(() => const Meetings());
+                        Get.to(() => const AuthPhones());
                       },
                     ),
                   ),

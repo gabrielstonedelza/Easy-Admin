@@ -86,7 +86,7 @@ class _ILSScreenState extends State<ILSScreen> {
             ? ILSViewerView(room: _room)
             : null
             : const Center(
-          child: Text("Joining...",
+          child: Text("Starting...",
             style: TextStyle(color: Colors.white),
           ),
         ),

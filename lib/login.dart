@@ -35,7 +35,6 @@ class _LoginViewState extends State<LoginView> {
 
   final Uri _url = Uri.parse('https://fnetagents.xyz/password-reset/');
 
-
   Future<void> _launchInBrowser() async {
     if (!await launchUrl(_url)) {
       throw 'Could not launch $_url';

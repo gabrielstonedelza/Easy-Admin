@@ -11,7 +11,6 @@ import 'package:lottie/lottie.dart';
 
 import '../../constants.dart';
 import '../../controller/agentcontroller.dart';
-import 'details/agenttransactions.dart';
 
 
 class MyAgents extends StatefulWidget {
@@ -242,7 +241,7 @@ class _MyAgentsState extends State<MyAgents> {
                   ),
                   trailing: items['user_blocked'] ? IconButton(
                       onPressed: () {
-                        Get.snackbar("Please wait...", "removing user from  block lists",
+                        Get.snackbar("Please wait...", "unblocking owner",
                             colorText: defaultWhite,
                             snackPosition: SnackPosition.BOTTOM,
                             duration: const Duration(seconds: 5),
@@ -253,7 +252,7 @@ class _MyAgentsState extends State<MyAgents> {
                   ) :
                   IconButton(
                       onPressed: () {
-                        Get.snackbar("Please wait...", "adding user to block lists",
+                        Get.snackbar("Please wait...", "blocking owner",
                             colorText: defaultWhite,
                             snackPosition: SnackPosition.BOTTOM,
                             duration: const Duration(seconds: 5),
