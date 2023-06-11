@@ -12,6 +12,7 @@ import 'package:easy_admin/screens/chats/ownersgroupchat.dart';
 import 'package:easy_admin/screens/makepayment.dart';
 import 'package:easy_admin/screens/meetings/allmeetings.dart';
 import 'package:easy_admin/screens/sms/selectsms.dart';
+import 'package:easy_admin/searchagentorowner.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -606,19 +607,19 @@ class _DashboardState extends State<Dashboard> {
                     child: GestureDetector(
                       child: Column(
                         children: [
-                          // Image.asset(
-                          //   "assets/images/sad.png",
-                          //   width: 70,
-                          //   height: 70,
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // const Text("Complains"),
+                          Image.asset(
+                            "assets/images/recruitment.png",
+                            width: 70,
+                            height: 70,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text("Search"),
                         ],
                       ),
                       onTap: () {
-                        // Get.to(() => const Complains());
+                        Get.to(() => const SearchAgentsOrOwner());
                       },
                     ),
                   ),

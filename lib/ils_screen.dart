@@ -28,7 +28,7 @@ class _ILSScreenState extends State<ILSScreen> {
     _room = VideoSDK.createRoom(
       roomId: widget.meetingId,
       token: widget.token,
-      displayName: "John Doe",
+      displayName: "Easy Agent",
       micEnabled: true,
       camEnabled: true,
       defaultCameraIndex:
