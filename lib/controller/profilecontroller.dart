@@ -55,7 +55,7 @@ class ProfileController extends GetxController{
         profileDetails = jsonData;
         for(var i in profileDetails){
           userId = i['id'].toString();
-          adminUniqueCode = i['agent_unique_code'];
+          adminUniqueCode = i['username'];
         }
         update();
       }

@@ -180,6 +180,10 @@ class _MyUsersState extends State<MyUsers> {
                     buildRow("Username : ", "username"),
                     buildRow("Phone : ", "phone_number"),
                     buildRow("Email : ", "email"),
+                    buildRow("Company : ", "company_name"),
+                    buildRow("Company No : ", "company_number"),
+                    buildRow("Location : ", "location"),
+                    items['abag_code'] == "" ? Container() :  buildRow("Abag Code : ", "abag_code"),
                     // const Padding(
                     //   padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),
                     //   child: Text("Tap for more",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground),),
@@ -224,10 +228,12 @@ class _MyUsersState extends State<MyUsers> {
             style: const TextStyle(
                 fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          Text(
-            items[subtitle],
-            style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+          Expanded(
+            child: Text(
+              items[subtitle],
+              style: const TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
           ),
         ],
       ),

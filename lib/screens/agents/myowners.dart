@@ -13,14 +13,14 @@ import '../../constants.dart';
 import '../../controller/agentcontroller.dart';
 
 
-class MyAgents extends StatefulWidget {
-  const MyAgents({Key? key}) : super(key: key);
+class MyOwners extends StatefulWidget {
+  const MyOwners({Key? key}) : super(key: key);
 
   @override
-  State<MyAgents> createState() => _MyAgentsState();
+  State<MyOwners> createState() => _MyOwnersState();
 }
 
-class _MyAgentsState extends State<MyAgents> {
+class _MyOwnersState extends State<MyOwners> {
   final AgentController controller = Get.find();
   final ProfileController profileController = Get.find();
   late String uToken = "";
@@ -36,7 +36,7 @@ class _MyAgentsState extends State<MyAgents> {
   Future<void> getAllMyAgents() async {
     try {
       isLoading = true;
-      final completedRides = "https://fnetagents.xyz/get_all_my_agents/$agentCode";
+      const completedRides = "https://fnetagents.xyz/get_all_my_agents/admin/";
       var link = Uri.parse(completedRides);
       http.Response response = await http.get(link, headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -48,6 +48,9 @@ class _MyAgentsState extends State<MyAgents> {
         setState(() {
           isLoading = false;
         });
+      }
+      else{
+        print(response.body);
       }
     } catch (e) {
       Get.snackbar("Sorry","something happened or please check your internet connection");
@@ -188,6 +191,7 @@ class _MyAgentsState extends State<MyAgents> {
         agentCode = storage.read("agent_code");
       });
     }
+    print(agentCode);
     controller.getAllMyAgents(uToken,profileController.adminUniqueCode);
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       controller.getAllMyAgents(uToken,profileController.adminUniqueCode);
@@ -227,6 +231,10 @@ class _MyAgentsState extends State<MyAgents> {
                       buildRow("Username : ", "username"),
                       buildRow("Phone : ", "phone_number"),
                       buildRow("Email : ", "email"),
+                      buildRow("Company : ", "company_name"),
+                      buildRow("Company No : ", "company_number"),
+                      buildRow("Location : ", "location"),
+                     items['abag_code'] == "" ? Container() :  buildRow("Abag Code : ", "abag_code"),
                       !controller.allMyAgents[i]['user_approved'] ?
                       const Padding(
                         padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),
@@ -279,10 +287,12 @@ class _MyAgentsState extends State<MyAgents> {
             style: const TextStyle(
                 fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          Text(
-            items[subtitle],
-            style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+          Expanded(
+            child: Text(
+              items[subtitle],
+              style: const TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
           ),
         ],
       ),

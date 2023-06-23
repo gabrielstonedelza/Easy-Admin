@@ -451,11 +451,11 @@ class _DashboardState extends State<Dashboard> {
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text("Your Owners"),
+                          const Text("My Owners"),
                         ],
                       ),
                       onTap: () {
-                        Get.to(() => const MyAgents());
+                        Get.to(() => const MyOwners());
                       },
                     ),
                   ),

@@ -223,6 +223,13 @@ class _SearchAgentsOrOwnerState extends State<SearchAgentsOrOwner> {
                                             Text(items['company_name'],style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.white),),
                                           ],
                                         ),
+                                        items['abag_code'] == "" ? Container() :   Row(
+                                          children: [
+                                            const Text("Abag Code: ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.white),),
+
+                                            Text(items['abag_code'],style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.white),),
+                                          ],
+                                        ),
                                         const SizedBox(height:15),
                                       ],
                                     ),
