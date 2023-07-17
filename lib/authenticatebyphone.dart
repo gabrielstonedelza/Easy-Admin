@@ -38,6 +38,9 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
   final SendSmsController sendSms = SendSmsController();
   late String userId = "";
   late String agentPhone = "";
+  late String userEmail = "";
+  late String agentUsername = "";
+  late String companyName = "";
   List profileDetails = [];
   final AuthPhoneController authController = Get.find();
   final TrialAndMonthlyPaymentController tpController = Get.find();
@@ -62,6 +65,8 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
       for(var i in profileDetails){
         userId = i['id'].toString();
         agentPhone = i['phone_number'];
+        userEmail = i['email'];
+        companyName = i['company_name'];
       }
 
       setState(() {
@@ -132,6 +137,19 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
     }
   }
 
+
+
+  Future<void> sendOtp() async {
+    final de_url = "https://fnetagents.xyz/send_otp/$oTP/$userEmail/$agentUsername/";
+    var link = Uri.parse(de_url);
+    http.Response response = await http.get(link, headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    });
+    if (response.statusCode == 200) {
+
+    }
+  }
+
   @override
   void initState(){
     super.initState();
@@ -147,7 +165,14 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
 
     Timer(const Duration(seconds: 10), () {
       String num = agentPhone.replaceFirst("0", '+233');
-      sendSms.sendMySms(num, "EasyAgent","Your code $oTP");
+      if(companyName == "Fnet Enterprise"){
+        sendSms.sendMySms(num, "FNET","Your code $oTP");
+        sendOtp();
+      }
+      else{
+        sendSms.sendMySms(num, "EasyAgent","Your code $oTP");
+        sendOtp();
+      }
     }
     );
     if (kDebugMode) {
@@ -207,7 +232,14 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
                   onPressed: (){
                     // print(oTP);
                     String num = agentPhone.replaceFirst("0", '+233');
-                    sendSms.sendMySms(num, "EasyAgent","Your code $oTP");
+                    if(companyName == "Fnet Enterprise"){
+                      sendSms.sendMySms(num, "FNET","Your code $oTP");
+                      sendOtp();
+                    }
+                    else{
+                      sendSms.sendMySms(num, "EasyAgent","Your code $oTP");
+                      sendOtp();
+                    }
                     Get.snackbar(
                         "Check Phone","code was sent again",
                         backgroundColor: snackBackground,
