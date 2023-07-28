@@ -31,6 +31,7 @@ import 'controller/localnotificationmanager.dart';
 import 'controller/notificationcontroller.dart';
 import 'controller/profilecontroller.dart';
 import 'controller/trialmonthlypayment.dart';
+import 'floats.dart';
 import 'login.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -376,7 +377,7 @@ class _DashboardState extends State<Dashboard> {
             }),
             backgroundColor: secondaryColor,
             actions: [
-              // IconButton(onPressed: () {  }, icon: const Icon(Icons.notifications),)
+              IconButton(onPressed: () { Get.to(() => const Floats()); }, icon: Image.asset("assets/images/float.png",width: 40,height: 40,),),
               Padding(
                 padding: const EdgeInsets.only(right: 23.0),
                 child: Row(
