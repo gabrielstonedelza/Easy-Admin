@@ -191,7 +191,9 @@ class _MyOwnersState extends State<MyOwners> {
         agentCode = storage.read("agent_code");
       });
     }
-    print(agentCode);
+    if (kDebugMode) {
+      print(agentCode);
+    }
     controller.getAllMyAgents(uToken,profileController.adminUniqueCode);
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       controller.getAllMyAgents(uToken,profileController.adminUniqueCode);
@@ -234,7 +236,7 @@ class _MyOwnersState extends State<MyOwners> {
                       buildRow("Company : ", "company_name"),
                       buildRow("Company No : ", "company_number"),
                       buildRow("Location : ", "location"),
-                     items['abag_code'] == "" ? Container() :  buildRow("Abag Code : ", "abag_code"),
+                     items['agent_code'] == "" ? Container() :  buildRow("Agent Code : ", "agent_code"),
                       !controller.allMyAgents[i]['user_approved'] ?
                       const Padding(
                         padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),

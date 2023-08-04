@@ -183,7 +183,7 @@ class _MyUsersState extends State<MyUsers> {
                     buildRow("Company : ", "company_name"),
                     buildRow("Company No : ", "company_number"),
                     buildRow("Location : ", "location"),
-                    items['abag_code'] == "" ? Container() :  buildRow("Abag Code : ", "abag_code"),
+                    items['agent_code'] == "" ? Container() :  buildRow("Agent Code : ", "agent_code"),
                     // const Padding(
                     //   padding: EdgeInsets.only(left: 8.0,bottom: 8,top: 8),
                     //   child: Text("Tap for more",style: TextStyle(fontWeight: FontWeight.bold,color: snackBackground),),
